@@ -15,7 +15,7 @@ app.get("/translate", async (req, res) => {
 
   const requestBody = `{ to: "${to}", translation_value: "${text}" }`;
 
-  console.log(`Receive request: ${requestBody}`)
+  console.log(`Receive request: ${requestBody}`);
   const response = await ollama.chat({
     model: "icky/translate:latest",
     messages: [
@@ -25,8 +25,16 @@ app.get("/translate", async (req, res) => {
       },
     ],
   });
-  console.log(`Translated: ${response.message.content}`)
-  res.send(response.message.content);
+
+  const translated = response.message.content.trim();
+  console.log(`Translated: ${response.message.content}`);
+
+  if (translated === "error") {
+    res.statusMessage = "error";
+    res.sendStatus(400).end();
+  } else {
+    res.send(response.message.content);
+  }
 });
 
 app.listen(port, () => {
