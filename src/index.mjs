@@ -26,7 +26,7 @@ app.get("/translate", async (req, res) => {
     ],
   });
 
-  const translated = response.message.content.replace(/(^\s*)|(\s*$)/, '');
+  const translated = response.message.content.replace(/(^\s*)|(\s*$)/g, '');
   console.log(`Translated: ${response.message.content}`);
 
   if (translated === "error") {
