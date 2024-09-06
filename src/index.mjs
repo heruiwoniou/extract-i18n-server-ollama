@@ -27,13 +27,13 @@ app.get("/translate", async (req, res) => {
   });
 
   const translated = response.message.content.replace(/(^\s*)|(\s*$)/g, '');
-  console.log(`Translated: ${response.message.content}`);
+  console.log(`Translated: ${translated}`);
 
   if (translated === "error") {
     res.statusMessage = "error";
     res.sendStatus(400).end();
   } else {
-    res.send(response.message.content);
+    res.send(translated);
   }
 });
 
