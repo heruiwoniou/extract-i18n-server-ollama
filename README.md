@@ -80,6 +80,9 @@ curl http://localhost:9877/translate\?to\=zh\&text\=this_is_a_introduce
 - Requests must look like `{ to: "zh" | "en" | "zh-CN" | "en-US", translation_value: string }`.
 - The primary model is tried first; on any failure (API error or a protocol
   `error` answer) the fallback model is tried.
+- After a primary failure the primary is skipped for 60 seconds (circuit
+  breaker): requests go straight to the fallback, and the primary is
+  re-probed when the window expires.
 - If every configured model fails, the service responds with HTTP 400.
 
 ## Tests
