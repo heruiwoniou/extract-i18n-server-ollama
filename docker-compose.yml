@@ -1,9 +1,16 @@
 services:
   translate:
-    image: node:18-alpine
+    build: .
+    image: extract-i18n-server-ollama
     working_dir: /home/translateService
     volumes:
-      - ./:/home/translateService
+      # 只挂载源码与配置文件, node_modules 直接使用镜像内构建好的
+      # (不再挂载整个项目目录, 宿主机不会生成 node_modules 等新文件)
+      - ./src:/home/translateService/src
+      - ./.env:/home/translateService/.env:ro
+      # .env.local 是 .env 的副本(本地覆盖用), 宿主机需存在此文件
+      # (不存在时 Docker 会在宿主机误建空目录, 故保持文件始终存在)
+      - ./.env.local:/home/translateService/.env.local:ro
     command: /home/translateService/start.sh
     ports:
       - "9877:9877"
